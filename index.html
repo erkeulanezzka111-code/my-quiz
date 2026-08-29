@@ -1,140 +1,244 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="kk">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kahoot Quiz</title>
+  <title>Мақал-мәтелдер викторинасы</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #46178f; /* Стиль Kahoot */
-      color: white;
+    * {
+      box-sizing: border-box;
       margin: 0;
-      padding: 15px;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      background-color: var(--tg-theme-bg-color, #0d1b2a);
+      color: var(--tg-theme-text-color, #ffffff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+    .quiz-card {
+      background-color: #1b263b;
+      width: 100%;
+      max-width: 480px;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
       display: flex;
       flex-direction: column;
-      align-items: center;
+      gap: 16px;
+      border: 1px solid rgba(212, 175, 55, 0.3);
     }
-    .quiz-container {
+    .progress-bar-container {
       width: 100%;
-      max-width: 400px;
-      text-align: center;
+      height: 10px;
+      background-color: #0d1b2a;
+      border-radius: 5px;
+      overflow: hidden;
     }
-    .question-box {
-      background: white;
-      color: #333;
-      padding: 20px;
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #d4af37, #f39c12);
+      transition: width 0.3s ease;
+    }
+    .status {
+      display: flex;
+      justify-content: space-between;
+      font-size: 15px;
+      font-weight: 500;
+      color: #e0e1dd;
+    }
+    .question-text {
+      font-size: 19px;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-top: 8px;
+      color: #ffffff;
+    }
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .option-btn {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 16px;
+      font-weight: 600;
+      text-align: left;
       border-radius: 12px;
-      font-size: 18px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    /* 2 Алтын түсті батырма */
+    .option-gold {
+      background-color: #d4af37;
+      color: #0d1b2a;
+    }
+    /* 2 Қою көк түсті батырма */
+    .option-blue {
+      background-color: #0d1b2a;
+      color: #ffffff;
+      border: 1px solid #415a77;
+    }
+    .option-btn:active {
+      transform: scale(0.98);
+    }
+    /* Дұрыс жауап — Жасыл */
+    .option-btn.correct {
+      background-color: #2ecc71 !important;
+      color: #ffffff !important;
+      border-color: #27ae60 !important;
+    }
+    /* Қате жауап — Қызыл */
+    .option-btn.incorrect {
+      background-color: #e74c3c !important;
+      color: #ffffff !important;
+      border-color: #c0392b !important;
+    }
+    .result-container {
+      text-align: center;
+      padding: 20px 0;
+      display: none;
+    }
+    .result-score {
+      font-size: 26px;
       font-weight: bold;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      margin: 16px 0;
+      color: #f39c12;
     }
-    .options-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .btn-option {
-      border: none;
-      border-radius: 8px;
-      padding: 15px 10px;
+    .restart-btn {
+      margin-top: 16px;
+      padding: 14px 28px;
       font-size: 16px;
       font-weight: bold;
-      color: white;
-      cursor: pointer;
-      transition: transform 0.1s, background-color 0.2s;
-    }
-    /* Цвета кнопок Kahoot */
-    .btn-option:nth-child(1) { background-color: #e21b3c; }
-    .btn-option:nth-child(2) { background-color: #1368ce; }
-    .btn-option:nth-child(3) { background-color: #d89e00; }
-    .btn-option:nth-child(4) { background-color: #26890c; }
-
-    /* Подсветка ответов */
-    .btn-option.correct-anim { background-color: #26890c !important; animation: pulse 0.5s; }
-    .btn-option.wrong-anim { background-color: #e21b3c !important; opacity: 0.6; }
-
-    .menu-btn {
-      margin-top: 20px;
-      background-color: #ff9800;
-      color: white;
       border: none;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
+      border-radius: 12px;
+      background: linear-gradient(90deg, #d4af37, #f39c12);
+      color: #0d1b2a;
       cursor: pointer;
-      width: 100%;
     }
   </style>
 </head>
 <body>
 
-<div class="quiz-container">
-  <div id="quiz">
-    <div class="question-box" id="question">Загрузка...</div>
-    <div class="options-grid" id="options"></div>
-  </div>
-  
-  <button class="menu-btn" onclick="resetQuiz()">🏠 Выйти в меню</button>
-</div>
-
-<script src="quizData.js"></script>
-<script>
-  let currentIdx = 0;
-  let isAnswered = false;
-
-  function loadQuestion() {
-    isAnswered = false;
-    const q = otanQuizData[currentIdx];
-    document.getElementById('question').innerText = q.text;
+  <div class="quiz-card" id="quizCard">
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
     
-    const optionsDiv = document.getElementById('options');
-    optionsDiv.innerHTML = '';
+    <div class="status">
+      <span id="questionCounter">Сұрақ 1 / 100</span>
+      <span id="scoreCounter">Ұпай: 0</span>
+    </div>
 
-    q.options.forEach((opt, idx) => {
-      const btn = document.createElement('button');
-      btn.className = 'btn-option';
-      btn.innerText = opt;
-      btn.onclick = () => checkAnswer(idx, btn);
-      optionsDiv.appendChild(btn);
-    });
-  }
+    <div class="question-text" id="questionText">Сұрақ жүктелуде...</div>
 
-  function checkAnswer(selectedIdx, selectedBtn) {
-    if (isAnswered) return;
-    isAnswered = true;
+    <div class="options-container" id="optionsContainer"></div>
 
-    const q = otanQuizData[currentIdx];
-    const allButtons = document.querySelectorAll('.btn-option');
+    <div class="result-container" id="resultContainer">
+      <h2>Викторина аяқталды! 🎉</h2>
+      <div class="result-score" id="finalScore"></div>
+      <button class="restart-btn" onclick="restartQuiz()">Қайта бастау</button>
+    </div>
+  </div>
 
-    if (selectedIdx === q.correct) {
-      selectedBtn.classList.add('correct-anim');
+  <script src="quizData.js"></script>
+  <script>
+    let tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.expand();
+    }
+
+    let currentIndex = 0;
+    let score = 0;
+    let canAnswer = true;
+
+    const questionTextEl = document.getElementById("questionText");
+    const optionsContainerEl = document.getElementById("optionsContainer");
+    const questionCounterEl = document.getElementById("questionCounter");
+    const scoreCounterEl = document.getElementById("scoreCounter");
+    const progressBarEl = document.getElementById("progressBar");
+    const resultContainerEl = document.getElementById("resultContainer");
+
+    function loadQuestion() {
+      if (typeof quizData === "undefined" || !quizData || quizData.length === 0) {
+        questionTextEl.textContent = "Сұрақтар жүктелмеді. quizData.js файлын тексеріңіз.";
+        return;
+      }
+
+      canAnswer = true;
+      const currentQuiz = quizData[currentIndex];
+
+      questionCounterEl.textContent = `Сұрақ ${currentIndex + 1} / ${quizData.length}`;
+      scoreCounterEl.textContent = `Ұпай: ${score}`;
+      progressBarEl.style.width = `${((currentIndex) / quizData.length) * 100}%`;
+
+      questionTextEl.textContent = `${currentIndex + 1}. ${currentQuiz.question}`;
+      optionsContainerEl.innerHTML = "";
+
+      currentQuiz.options.forEach((option, idx) => {
+        const btn = document.createElement("button");
+        // Алғашқы 2 батырма Алтын түсті, соңғы 2 батырма Қою көк түсті
+        const colorClass = idx < 2 ? "option-gold" : "option-blue";
+        btn.className = `option-btn ${colorClass}`;
+        btn.textContent = option;
+        btn.onclick = () => selectOption(idx, btn);
+        optionsContainerEl.appendChild(btn);
+      });
+    }
+
+    function selectOption(selectedIndex, btnElement) {
+      if (!canAnswer) return;
+      canAnswer = false;
+
+      const currentQuiz = quizData[currentIndex];
+      const buttons = optionsContainerEl.querySelectorAll(".option-btn");
+
+      if (selectedIndex === currentQuiz.correct) {
+        btnElement.classList.add("correct");
+        score++;
+        scoreCounterEl.textContent = `Ұпай: ${score}`;
+      } else {
+        btnElement.classList.add("incorrect");
+        buttons[currentQuiz.correct].classList.add("correct");
+      }
+
       setTimeout(() => {
-        currentIdx++;
-        if (currentIdx < otanQuizData.length) loadQuestion();
-        else alert("Құттықтаймыз! Викторина аяқталды!");
-      }, 1000);
-    } else {
-      // Показываем красным выбранный, а правильный — зеленым
-      selectedBtn.classList.add('wrong-anim');
-      allButtons[q.correct].classList.add('correct-anim');
-      
-      setTimeout(() => {
-        alert("Қате жауап! Мәзірге ораласыз.");
-        resetQuiz();
+        currentIndex++;
+        if (currentIndex < quizData.length) {
+          loadQuestion();
+        } else {
+          showResults();
+        }
       }, 1200);
     }
-  }
 
-  function resetQuiz() {
-    currentIdx = 0;
-    loadQuestion();
-  }
+    function showResults() {
+      questionTextEl.style.display = "none";
+      optionsContainerEl.style.display = "none";
+      progressBarEl.style.width = "100%";
+      resultContainerEl.style.display = "block";
+      document.getElementById("finalScore").textContent = `Нәтижеңіз: ${score} / ${quizData.length}`;
+    }
 
-  loadQuestion();
-</script>
+    function restartQuiz() {
+      currentIndex = 0;
+      score = 0;
+      questionTextEl.style.display = "block";
+      optionsContainerEl.style.display = "flex";
+      resultContainerEl.style.display = "none";
+      loadQuestion();
+    }
+
+    window.onload = loadQuestion;
+  </script>
 </body>
 </html>
