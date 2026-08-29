@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Мақал-мәтелдер викторинасы</title>
-  <script src="https://telegram.org/js/telegram-web-app.js?v=99"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js?v=2026"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -33,7 +33,6 @@
       gap: 16px;
       border: 1px solid rgba(212, 175, 55, 0.3);
     }
-    /* Меню стилі */
     .menu-container {
       display: flex;
       flex-direction: column;
@@ -69,8 +68,6 @@
     .menu-btn:active {
       transform: scale(0.98);
     }
-
-    /* Викторина бөлігі */
     .quiz-screen {
       display: none;
       flex-direction: column;
@@ -184,7 +181,6 @@
 
   <div class="quiz-card" id="quizCard">
     
-    <!-- ТАҚЫРЫПТАР МЕНЮСІ -->
     <div class="menu-container" id="menuContainer">
       <div class="menu-title">Бөлімді таңдаңыз</div>
       <button class="menu-btn" onclick="startQuiz(0)">🇰🇿 І. Отан, туған жер <span>20 сұрақ</span></button>
@@ -194,7 +190,6 @@
       <button class="menu-btn" onclick="startQuiz(4)">🌟 V. Адамгершілік <span>20 сұрақ</span></button>
     </div>
 
-    <!-- ВИКТОРИНА ЭКРАНЫ -->
     <div class="quiz-screen" id="quizScreen">
       <div class="top-bar">
         <button class="back-btn" onclick="goToMenu()">⬅️ Менюге қайту</button>
