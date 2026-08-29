@@ -195,7 +195,7 @@
     ];
 
     let currentCategoryIndex = 0, currentIndex = 0, score = 0, canAnswer = true;
-    let currentCorrectNewIndex = 0; // Дұрыс жауаптың араласып кеткеннен кейінгі нақты орны
+    let currentCorrectNewIndex = 0;
 
     function startQuiz(catIndex) {
       currentCategoryIndex = catIndex;
@@ -225,7 +225,6 @@
       document.getElementById("progressBar").style.width = `${(currentIndex / cat.questions.length) * 100}%`;
       document.getElementById("questionText").textContent = `${currentIndex + 1}. ${q.question}`;
       
-      // Нұсқаларды индекстерімен бірге массив жасап, рандом түрде араластырамыз
       let optionsWithIndex = q.options.map((opt, idx) => ({ text: opt, originalIndex: idx }));
       
       for (let i = optionsWithIndex.length - 1; i > 0; i--) {
@@ -237,7 +236,6 @@
       optContainer.innerHTML = "";
 
       optionsWithIndex.forEach((item, newIdx) => {
-        // Егер бұл элементтің бастапқы индексі дұрыс жауап болса, оның жаңа позициясын есте сақтаймыз
         if (item.originalIndex === q.correct) {
           currentCorrectNewIndex = newIdx;
         }
