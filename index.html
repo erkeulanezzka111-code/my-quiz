@@ -4,183 +4,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Мақал-мәтелдер викторинасы</title>
-  <script src="https://telegram.org/js/telegram-web-app.js?v=2026"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-    body {
-      background-color: var(--tg-theme-bg-color, #0d1b2a);
-      color: var(--tg-theme-text-color, #ffffff);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 16px;
-    }
-    .quiz-card {
-      background-color: #1b263b;
-      width: 100%;
-      max-width: 480px;
-      border-radius: 20px;
-      padding: 24px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      border: 1px solid rgba(212, 175, 55, 0.3);
-    }
-    .menu-container {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      text-align: center;
-    }
-    .menu-title {
-      font-size: 22px;
-      font-weight: bold;
-      color: #f39c12;
-      margin-bottom: 8px;
-    }
-    .menu-btn {
-      width: 100%;
-      padding: 16px;
-      font-size: 16px;
-      font-weight: 600;
-      text-align: left;
-      border-radius: 12px;
-      border: 1px solid #415a77;
-      background-color: #0d1b2a;
-      color: #ffffff;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .menu-btn:hover {
-      border-color: #d4af37;
-      background-color: #132742;
-    }
-    .menu-btn:active {
-      transform: scale(0.98);
-    }
-    .quiz-screen {
-      display: none;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .back-btn {
-      background: none;
-      border: none;
-      color: #d4af37;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      padding: 4px 8px;
-    }
-    .progress-bar-container {
-      width: 100%;
-      height: 10px;
-      background-color: #0d1b2a;
-      border-radius: 5px;
-      overflow: hidden;
-    }
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #d4af37, #f39c12);
-      transition: width 0.3s ease;
-    }
-    .status {
-      display: flex;
-      justify-content: space-between;
-      font-size: 15px;
-      font-weight: 500;
-      color: #e0e1dd;
-    }
-    .question-text {
-      font-size: 19px;
-      font-weight: 600;
-      line-height: 1.4;
-      margin-top: 8px;
-      color: #ffffff;
-    }
-    .options-container {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 8px;
-    }
-    .option-btn {
-      width: 100%;
-      padding: 14px 18px;
-      font-size: 16px;
-      font-weight: 600;
-      text-align: left;
-      border-radius: 12px;
-      border: 2px solid transparent;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .option-gold {
-      background-color: #d4af37;
-      color: #0d1b2a;
-    }
-    .option-blue {
-      background-color: #0d1b2a;
-      color: #ffffff;
-      border: 1px solid #415a77;
-    }
-    .option-btn:active {
-      transform: scale(0.98);
-    }
-    .option-btn.correct {
-      background-color: #2ecc71 !important;
-      color: #ffffff !important;
-      border-color: #27ae60 !important;
-    }
-    .option-btn.incorrect {
-      background-color: #e74c3c !important;
-      color: #ffffff !important;
-      border-color: #c0392b !important;
-    }
-    .result-container {
-      text-align: center;
-      padding: 20px 0;
-      display: none;
-    }
-    .result-score {
-      font-size: 26px;
-      font-weight: bold;
-      margin: 16px 0;
-      color: #f39c12;
-    }
-    .restart-btn {
-      margin-top: 16px;
-      padding: 14px 28px;
-      font-size: 16px;
-      font-weight: bold;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(90deg, #d4af37, #f39c12);
-      color: #0d1b2a;
-      cursor: pointer;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: #0d1b2a; color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 16px; }
+    .quiz-card { background-color: #1b263b; width: 100%; max-width: 480px; border-radius: 20px; padding: 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); display: flex; flex-direction: column; gap: 16px; border: 1px solid rgba(212, 175, 55, 0.3); }
+    .menu-container { display: flex; flex-direction: column; gap: 12px; text-align: center; }
+    .menu-title { font-size: 22px; font-weight: bold; color: #f39c12; margin-bottom: 8px; }
+    .menu-btn { width: 100%; padding: 16px; font-size: 16px; font-weight: 600; text-align: left; border-radius: 12px; border: 1px solid #415a77; background-color: #0d1b2a; color: #ffffff; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .menu-btn:hover { border-color: #d4af37; background-color: #132742; }
+    .quiz-screen { display: none; flex-direction: column; gap: 16px; }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; }
+    .back-btn { background: none; border: none; color: #d4af37; font-size: 14px; font-weight: 600; cursor: pointer; padding: 4px 8px; }
+    .progress-bar-container { width: 100%; height: 10px; background-color: #0d1b2a; border-radius: 5px; overflow: hidden; }
+    .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #d4af37, #f39c12); transition: width 0.3s ease; }
+    .status { display: flex; justify-content: space-between; font-size: 15px; font-weight: 500; color: #e0e1dd; }
+    .question-text { font-size: 19px; font-weight: 600; line-height: 1.4; margin-top: 8px; color: #ffffff; }
+    .options-container { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+    .option-btn { width: 100%; padding: 14px 18px; font-size: 16px; font-weight: 600; text-align: left; border-radius: 12px; border: 2px solid transparent; cursor: pointer; }
+    .option-gold { background-color: #d4af37; color: #0d1b2a; }
+    .option-blue { background-color: #0d1b2a; color: #ffffff; border: 1px solid #415a77; }
+    .option-btn.correct { background-color: #2ecc71 !important; color: #ffffff !important; }
+    .option-btn.incorrect { background-color: #e74c3c !important; color: #ffffff !important; }
+    .result-container { text-align: center; padding: 20px 0; display: none; }
+    .result-score { font-size: 26px; font-weight: bold; margin: 16px 0; color: #f39c12; }
+    .restart-btn { margin-top: 16px; padding: 14px 28px; font-size: 16px; font-weight: bold; border: none; border-radius: 12px; background: linear-gradient(90deg, #d4af37, #f39c12); color: #0d1b2a; cursor: pointer; }
   </style>
 </head>
 <body>
 
-  <div class="quiz-card" id="quizCard">
-    
+  <div class="quiz-card">
+    <!-- МЕНЮ -->
     <div class="menu-container" id="menuContainer">
       <div class="menu-title">Бөлімді таңдаңыз</div>
       <button class="menu-btn" onclick="startQuiz(0)">🇰🇿 І. Отан, туған жер <span>20 сұрақ</span></button>
@@ -190,32 +44,25 @@
       <button class="menu-btn" onclick="startQuiz(4)">🌟 V. Адамгершілік <span>20 сұрақ</span></button>
     </div>
 
+    <!-- ВИКТОРИНА -->
     <div class="quiz-screen" id="quizScreen">
       <div class="top-bar">
         <button class="back-btn" onclick="goToMenu()">⬅️ Менюге қайту</button>
         <span id="themeTitle" style="font-size: 13px; color: #d4af37; font-weight: 600;"></span>
       </div>
-
-      <div class="progress-bar-container">
-        <div class="progress-bar" id="progressBar"></div>
-      </div>
-      
+      <div class="progress-bar-container"><div class="progress-bar" id="progressBar"></div></div>
       <div class="status">
         <span id="questionCounter">Сұрақ 1 / 20</span>
         <span id="scoreCounter">Ұпай: 0</span>
       </div>
-
-      <div class="question-text" id="questionText">Сұрақ жүктелуде...</div>
-
+      <div class="question-text" id="questionText"></div>
       <div class="options-container" id="optionsContainer"></div>
-
       <div class="result-container" id="resultContainer">
         <h2>Тақырып аяқталды! 🎉</h2>
         <div class="result-score" id="finalScore"></div>
         <button class="restart-btn" onclick="goToMenu()">Мәзірге оралу</button>
       </div>
     </div>
-
   </div>
 
   <script>
@@ -323,7 +170,7 @@
       {
         title: "V. Адамгершілік",
         questions: [
-          { question: "Адамның өзі жақсы болса,...", options: ["Аты да жақсы", "Ісі де жақсы", "Сөзі де жақсы", "Мінезі де жақсы"], correct: 0 },
+          { question: "Адамның өзі жақсы болса,...", options: ["Аты да жақсы", "Ісі да жақсы", "Сөзі де жақсы", "Мінезі де жақсы"], correct: 0 },
           { question: "Адамгершілік болмай,...", options: ["Әдептілік болмас", "Кісілік болмас", "Байлық болмас", "Бақыт болмас"], correct: 0 },
           { question: "Жарлы болсаң да,...", options: ["Арлы бол", "Бай бол", "Шыншыл бол", "Сабырлы бол"], correct: 0 },
           { question: "Жақсының аты өлмейді,...", options: ["Ғалымның хаты өлмейді", "Батырдың өзі өлмейді", "Шешеннің сөзі өлмейді", "Ақынның өлеңі өлмейді"], correct: 0 },
@@ -347,102 +194,73 @@
       }
     ];
 
-    let tg = window.Telegram?.WebApp;
-    if (tg) {
-      tg.expand();
-    }
-
-    let currentCategoryIndex = 0;
-    let currentIndex = 0;
-    let score = 0;
-    let canAnswer = true;
-
-    const menuContainerEl = document.getElementById("menuContainer");
-    const quizScreenEl = document.getElementById("quizScreen");
-    const themeTitleEl = document.getElementById("themeTitle");
-    const questionTextEl = document.getElementById("questionText");
-    const optionsContainerEl = document.getElementById("optionsContainer");
-    const questionCounterEl = document.getElementById("questionCounter");
-    const scoreCounterEl = document.getElementById("scoreCounter");
-    const progressBarEl = document.getElementById("progressBar");
-    const resultContainerEl = document.getElementById("resultContainer");
+    let currentCategoryIndex = 0, currentIndex = 0, score = 0, canAnswer = true;
 
     function startQuiz(catIndex) {
       currentCategoryIndex = catIndex;
       currentIndex = 0;
       score = 0;
-
-      menuContainerEl.style.display = "none";
-      quizScreenEl.style.display = "flex";
-      resultContainerEl.style.display = "none";
-      questionTextEl.style.display = "block";
-      optionsContainerEl.style.display = "flex";
-
-      themeTitleEl.textContent = categories[catIndex].title;
+      document.getElementById("menuContainer").style.display = "none";
+      document.getElementById("quizScreen").style.display = "flex";
+      document.getElementById("resultContainer").style.display = "none";
+      document.getElementById("questionText").style.display = "block";
+      document.getElementById("optionsContainer").style.display = "flex";
+      document.getElementById("themeTitle").textContent = categories[catIndex].title;
       loadQuestion();
     }
 
     function goToMenu() {
-      quizScreenEl.style.display = "none";
-      menuContainerEl.style.display = "flex";
+      document.getElementById("quizScreen").style.display = "none";
+      document.getElementById("menuContainer").style.display = "flex";
     }
 
     function loadQuestion() {
       canAnswer = true;
-      const currentCat = categories[currentCategoryIndex];
-      const currentQuiz = currentCat.questions[currentIndex];
-
-      questionCounterEl.textContent = `Сұрақ ${currentIndex + 1} / ${currentCat.questions.length}`;
-      scoreCounterEl.textContent = `Ұпай: ${score}`;
-      progressBarEl.style.width = `${(currentIndex / currentCat.questions.length) * 100}%`;
-
-      questionTextEl.textContent = `${currentIndex + 1}. ${currentQuiz.question}`;
-      optionsContainerEl.innerHTML = "";
-
-      currentQuiz.options.forEach((option, idx) => {
+      const cat = categories[currentCategoryIndex];
+      const q = cat.questions[currentIndex];
+      document.getElementById("questionCounter").textContent = `Сұрақ ${currentIndex + 1} / ${cat.questions.length}`;
+      document.getElementById("scoreCounter").textContent = `Ұпай: ${score}`;
+      document.getElementById("progressBar").style.width = `${(currentIndex / cat.questions.length) * 100}%`;
+      document.getElementById("questionText").textContent = `${currentIndex + 1}. ${q.question}`;
+      
+      const optContainer = document.getElementById("optionsContainer");
+      optContainer.innerHTML = "";
+      q.options.forEach((opt, idx) => {
         const btn = document.createElement("button");
-        const colorClass = idx < 2 ? "option-gold" : "option-blue";
-        btn.className = `option-btn ${colorClass}`;
-        btn.textContent = option;
+        btn.className = `option-btn ${idx < 2 ? "option-gold" : "option-blue"}`;
+        btn.textContent = opt;
         btn.onclick = () => selectOption(idx, btn);
-        optionsContainerEl.appendChild(btn);
+        optContainer.appendChild(btn);
       });
     }
 
-    function selectOption(selectedIndex, btnElement) {
+    function selectOption(idx, btn) {
       if (!canAnswer) return;
       canAnswer = false;
+      const q = categories[currentCategoryIndex].questions[currentIndex];
+      const buttons = document.querySelectorAll(".option-btn");
 
-      const currentCat = categories[currentCategoryIndex];
-      const currentQuiz = currentCat.questions[currentIndex];
-      const buttons = optionsContainerEl.querySelectorAll(".option-btn");
-
-      if (selectedIndex === currentQuiz.correct) {
-        btnElement.classList.add("correct");
+      if (idx === q.correct) {
+        btn.classList.add("correct");
         score++;
-        scoreCounterEl.textContent = `Ұпай: ${score}`;
+        document.getElementById("scoreCounter").textContent = `Ұпай: ${score}`;
       } else {
-        btnElement.classList.add("incorrect");
-        buttons[currentQuiz.correct].classList.add("correct");
+        btn.classList.add("incorrect");
+        buttons[q.correct].classList.add("correct");
       }
 
       setTimeout(() => {
         currentIndex++;
-        if (currentIndex < currentCat.questions.length) {
+        if (currentIndex < categories[currentCategoryIndex].questions.length) {
           loadQuestion();
         } else {
-          showResults();
+          document.getElementById("questionText").style.display = "none";
+          document.getElementById("optionsContainer").style.display = "none";
+          document.getElementById("progressBar").style.width = "100%";
+          document.getElementById("resultContainer").style.display = "block";
+          document.getElementById("finalScore").textContent = `Нәтижеңіз: ${score} / 20`;
         }
       }, 1200);
-    }
-
-    function showResults() {
-      const currentCat = categories[currentCategoryIndex];
-      questionTextEl.style.display = "none";
-      optionsContainerEl.style.display = "none";
-      progressBarEl.style.width = "100%";
-      resultContainerEl.style.display = "block";
-      document.getElementById("finalScore").textContent = `Нәтижеңіз: ${score} / ${currentCat.questions.length}`;
     }
   </script>
 </body>
