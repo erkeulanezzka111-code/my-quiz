@@ -150,7 +150,7 @@
     </div>
   </div>
 
-  <script src="quizData.js"></script>
+  <script src="quizData.js?v=2"></script>
   <script>
     let tg = window.Telegram?.WebApp;
     if (tg) {
@@ -186,7 +186,6 @@
 
       currentQuiz.options.forEach((option, idx) => {
         const btn = document.createElement("button");
-        // Алғашқы 2 батырма Алтын түсті, соңғы 2 батырма Қою көк түсті
         const colorClass = idx < 2 ? "option-gold" : "option-blue";
         btn.className = `option-btn ${colorClass}`;
         btn.textContent = option;
