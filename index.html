@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kahoot Quiz</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #46178f; /* Стиль Kahoot */
+      color: white;
+      margin: 0;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .quiz-container {
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .question-box {
+      background: white;
+      color: #333;
+      padding: 20px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .btn-option {
+      border: none;
+      border-radius: 8px;
+      padding: 15px 10px;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.1s, background-color 0.2s;
+    }
+    /* Цвета кнопок Kahoot */
+    .btn-option:nth-child(1) { background-color: #e21b3c; }
+    .btn-option:nth-child(2) { background-color: #1368ce; }
+    .btn-option:nth-child(3) { background-color: #d89e00; }
+    .btn-option:nth-child(4) { background-color: #26890c; }
+
+    /* Подсветка ответов */
+    .btn-option.correct-anim { background-color: #26890c !important; animation: pulse 0.5s; }
+    .btn-option.wrong-anim { background-color: #e21b3c !important; opacity: 0.6; }
+
+    .menu-btn {
+      margin-top: 20px;
+      background-color: #ff9800;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <div class="question-box" id="question">Загрузка...</div>
+    <div class="options-grid" id="options"></div>
+  </div>
+  
+  <button class="menu-btn" onclick="resetQuiz()">🏠 Выйти в меню</button>
+</div>
+
+<script src="quizData.js"></script>
+<script>
+  let currentIdx = 0;
+  let isAnswered = false;
+
+  function loadQuestion() {
+    isAnswered = false;
+    const q = otanQuizData[currentIdx];
+    document.getElementById('question').innerText = q.text;
+    
+    const optionsDiv = document.getElementById('options');
+    optionsDiv.innerHTML = '';
+
+    q.options.forEach((opt, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'btn-option';
+      btn.innerText = opt;
+      btn.onclick = () => checkAnswer(idx, btn);
+      optionsDiv.appendChild(btn);
+    });
+  }
+
+  function checkAnswer(selectedIdx, selectedBtn) {
+    if (isAnswered) return;
+    isAnswered = true;
+
+    const q = otanQuizData[currentIdx];
+    const allButtons = document.querySelectorAll('.btn-option');
+
+    if (selectedIdx === q.correct) {
+      selectedBtn.classList.add('correct-anim');
+      setTimeout(() => {
+        currentIdx++;
+        if (currentIdx < otanQuizData.length) loadQuestion();
+        else alert("Құттықтаймыз! Викторина аяқталды!");
+      }, 1000);
+    } else {
+      // Показываем красным выбранный, а правильный — зеленым
+      selectedBtn.classList.add('wrong-anim');
+      allButtons[q.correct].classList.add('correct-anim');
+      
+      setTimeout(() => {
+        alert("Қате жауап! Мәзірге ораласыз.");
+        resetQuiz();
+      }, 1200);
+    }
+  }
+
+  function resetQuiz() {
+    currentIdx = 0;
+    loadQuestion();
+  }
+
+  loadQuestion();
+</script>
+</body>
+</html>
