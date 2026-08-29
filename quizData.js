@@ -1,4 +1,4 @@
-const otanquizData = [
+const quizData = [
   // І. Отан, туған жер (20)
   { question: "Отан сұлулықтан да...", options: ["Ыстық", "Биік", "Қымбат", "Артық"], correct: 0 },
   { question: "Отансыз адам — баусыз...", options: ["Құс", "Ағаш", "Бақша", "Гүл"], correct: 2 },
