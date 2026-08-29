@@ -195,6 +195,7 @@
     ];
 
     let currentCategoryIndex = 0, currentIndex = 0, score = 0, canAnswer = true;
+    let currentCorrectNewIndex = 0; // Дұрыс жауаптың араласып кеткеннен кейінгі нақты орны
 
     function startQuiz(catIndex) {
       currentCategoryIndex = catIndex;
@@ -218,18 +219,33 @@
       canAnswer = true;
       const cat = categories[currentCategoryIndex];
       const q = cat.questions[currentIndex];
+      
       document.getElementById("questionCounter").textContent = `Сұрақ ${currentIndex + 1} / ${cat.questions.length}`;
       document.getElementById("scoreCounter").textContent = `Ұпай: ${score}`;
       document.getElementById("progressBar").style.width = `${(currentIndex / cat.questions.length) * 100}%`;
       document.getElementById("questionText").textContent = `${currentIndex + 1}. ${q.question}`;
       
+      // Нұсқаларды индекстерімен бірге массив жасап, рандом түрде араластырамыз
+      let optionsWithIndex = q.options.map((opt, idx) => ({ text: opt, originalIndex: idx }));
+      
+      for (let i = optionsWithIndex.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [optionsWithIndex[i], optionsWithIndex[j]] = [optionsWithIndex[j], optionsWithIndex[i]];
+      }
+
       const optContainer = document.getElementById("optionsContainer");
       optContainer.innerHTML = "";
-      q.options.forEach((opt, idx) => {
+
+      optionsWithIndex.forEach((item, newIdx) => {
+        // Егер бұл элементтің бастапқы индексі дұрыс жауап болса, оның жаңа позициясын есте сақтаймыз
+        if (item.originalIndex === q.correct) {
+          currentCorrectNewIndex = newIdx;
+        }
+
         const btn = document.createElement("button");
-        btn.className = `option-btn ${idx < 2 ? "option-gold" : "option-blue"}`;
-        btn.textContent = opt;
-        btn.onclick = () => selectOption(idx, btn);
+        btn.className = `option-btn ${newIdx % 2 === 0 ? "option-gold" : "option-blue"}`;
+        btn.textContent = item.text;
+        btn.onclick = () => selectOption(newIdx, btn);
         optContainer.appendChild(btn);
       });
     }
@@ -237,16 +253,15 @@
     function selectOption(idx, btn) {
       if (!canAnswer) return;
       canAnswer = false;
-      const q = categories[currentCategoryIndex].questions[currentIndex];
       const buttons = document.querySelectorAll(".option-btn");
 
-      if (idx === q.correct) {
+      if (idx === currentCorrectNewIndex) {
         btn.classList.add("correct");
         score++;
         document.getElementById("scoreCounter").textContent = `Ұпай: ${score}`;
       } else {
         btn.classList.add("incorrect");
-        buttons[q.correct].classList.add("correct");
+        buttons[currentCorrectNewIndex].classList.add("correct");
       }
 
       setTimeout(() => {
